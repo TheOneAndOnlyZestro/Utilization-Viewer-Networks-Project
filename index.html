@@ -259,7 +259,7 @@
         try {
           //Send the actual Data
           console.log("DOING FETCH");
-          const res = await fetch("http://127.0.0.1:8080/", {
+          const res = await fetch(`http://192.168.0.122:8080/`, {
             method: "POST",
             headers: {
               "Content-Type": "text/plain",

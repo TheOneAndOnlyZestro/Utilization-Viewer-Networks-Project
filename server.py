@@ -1,8 +1,5 @@
 import socket
 from threading import Thread
-import os
-import keyboard
-import json
 class Server:
     def handle_client(self, client_socket, client_address):
         print(f'Connected to {client_address}')
@@ -124,4 +121,4 @@ class Server:
 
 
 
-Server('localhost',8080, 5.0)
+Server('0.0.0.0',8080, 5.0)

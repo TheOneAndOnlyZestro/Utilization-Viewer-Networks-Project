@@ -64,7 +64,7 @@ class http_Server:
         self.clients = []
         #create a socket for this server
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.bind(('localhost', 8000))
+        self.socket.bind(('0.0.0.0', 8000))
         self.socket.listen()
 
         for i in range(2):
@@ -76,16 +76,13 @@ class http_Server:
                 Thread(target=self.start_http_server).start()
 
             time.sleep(1)
-            url = f"http://localhost:8888/client{i+1}"
-            print(f"This is the url: {url}")
-            webbrowser.open(url)
 
         
         
 
     def start_http_server(self):
         os.chdir(os.getcwd())
-        httpd = HTTPServer(('localhost', 8888), DynamicHTTPRequestHandler)
+        httpd = HTTPServer(('0.0.0.0', 8888), DynamicHTTPRequestHandler)
 
         #handle sockets
         print("HTTP server running on http://localhost:8888")
