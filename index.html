@@ -137,7 +137,6 @@
       }
       .results:hover {
         transform: scale(1.01, 1.01);
-        transition: 500ms;
       }
     </style>
 
@@ -154,7 +153,7 @@
         datalist = data.split("\n");
         result = "";
         datalist.forEach((e, i) => {
-          result += `<div class='results' id='result${i}'' style= 'font-size:32pt;height:100%; color: white ;border-radius:0.5em; background-color: #435585; margin: 5px; transition:500ms'>${e}</div>`;
+          result += `<div class='results' id='result${i}'' style= 'font-size:32pt;height:100%; color: white ;border-radius:0.5em; background-color: #435585; margin: 5px'>${e}</div>`;
         });
 
         return result;
