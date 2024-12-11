@@ -17,7 +17,7 @@ class Client:
         #Connect to HTTP server
         self.httpSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         
-        self.httpSocket.connect(('localhost', 8000))
+        self.httpSocket.connect((HOST, 8000)) 
         print(f"Connect to HTTP Server Succesfully")
         while True:
             try:
