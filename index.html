@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Your Diagnostics</title>
+  </head>
+  <body>
+    <div class="Header"><h1 class="HeaderText">#CLIENT#</h1></div>
+    <div class="Main">
+      <div class="Container"></div>
+      <div class="editor">
+        <form class="MainForm">
+          <div class="item">
+            <label>Set CPU Threshold</label>
+            <input type="number" placeholder="Type A Value For CPU" id="cpu" />
+          </div>
+
+          <div class="item">
+            <label>Set GPU Threshold</label>
+            <input type="number" placeholder="Type A Value For GPU" id="gpu" />
+          </div>
+
+          <div class="item">
+            <label>Set MEM Threshold</label>
+            <input
+              type="number"
+              placeholder="Type A Value For Memory"
+              id="mem"
+            />
+          </div>
+
+          <div class="item">
+            <button type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <h1>Supervised by Dr. Mohammed Ashour & TA. Basma Mohammed</h1>
+    <style>
+      :root {
+        color: white;
+        text-align: center;
+        background-color: #1c2029;
+        font-family: Consolas, "Courier New", Courier, Monaco, "Lucida Console",
+          monospace;
+        height: 100vh;
+        margin: 0;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 100%;
+      }
+      .Main {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row;
+        height: 75%;
+        width: 80%;
+      }
+      .Container {
+        font-size: 24pt;
+        color: white;
+        background-color: #26234a;
+        border-radius: 0.25em;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        flex-grow: 2;
+        height: 100%;
+
+        display: flex;
+        justify-content: space-between;
+        align-content: center;
+        flex-direction: column;
+      }
+
+      .cmp {
+        color: black;
+        background-color: #363062;
+        border-radius: 0.25em;
+        padding: 5px;
+        margin: 10px;
+      }
+
+      .editor {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: #435585;
+        color: white;
+        padding: 20px;
+        border-radius: 0.5em;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        flex-grow: 1;
+        height: 100%;
+      }
+
+      .item {
+        width: 100%;
+        margin-bottom: 15px;
+      }
+
+      .item label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      .item input {
+        width: calc(100% - 20px);
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 0.25em;
+      }
+
+      button {
+        padding: 10px 20px;
+        background-color: #363062;
+        color: white;
+        border: none;
+        border-radius: 0.25em;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background-color: #5a1167;
+      }
+      .HeaderText {
+        font-size: 62pt;
+      }
+      .results:hover {
+        transform: scale(1.01, 1.01);
+        transition: 500ms;
+      }
+    </style>
+
+    <script>
+      cpu = document.querySelector("#cpu");
+      gpu = document.querySelector("#gpu");
+      mem = document.querySelector("#mem");
+      headerText = document.querySelector(".HeaderText");
+      mainForm = document.querySelector(".MainForm");
+      container = document.querySelector(".Container");
+      header = document.querySelector(".Header");
+
+      function createDataContent(data) {
+        datalist = data.split("\n");
+        result = "";
+        datalist.forEach((e, i) => {
+          result += `<div class='results' id='result${i}'' style= 'font-size:32pt;height:100%; color: white ;border-radius:0.5em; background-color: #435585; margin: 5px; transition:500ms'>${e}</div>`;
+        });
+
+        return result;
+      }
+      async function fetchUpdates() {
+        if (headerText.innerText === "") {
+          return;
+        }
+        try {
+          //fetch updates from server
+          const resp = await fetch(
+            "/" + headerText.innerText.toLowerCase() + "/updates"
+          );
+          if (resp.ok) {
+            const data = await resp.text();
+            str = createDataContent(data);
+            if (str !== container.innerHTML) {
+              container.innerHTML = str;
+              results = document.querySelectorAll(".result");
+            }
+          }
+        } catch (err) {}
+      }
+      async function fetchCheck() {
+        if (headerText.innerText === "") {
+          return;
+        }
+        try {
+          const resp = await fetch(
+            "/" + headerText.innerText.toLowerCase() + "/check"
+          );
+          if (resp.ok) {
+            const data = await resp.text();
+            if (data[0] === "T") {
+              if (
+                document.querySelector("#result1").style.backgroundColor !==
+                "#B8001F"
+              ) {
+                document.querySelector("#result1").style.backgroundColor =
+                  "#B8001F";
+              }
+            } else {
+              if (
+                document.querySelector("#result1").style.backgroundColor !==
+                "#435585"
+              ) {
+                document.querySelector("#result1").style.backgroundColor =
+                  "#435585";
+              }
+            }
+
+            if (data[1] === "T") {
+              if (
+                document.querySelector("#result2").style.backgroundColor !==
+                "#B8001F"
+              ) {
+                document.querySelector("#result2").style.backgroundColor =
+                  "#B8001F";
+              }
+            } else {
+              if (
+                document.querySelector("#result2").style.backgroundColor !==
+                "#435585"
+              ) {
+                document.querySelector("#result2").style.backgroundColor =
+                  "#435585";
+              }
+            }
+
+            if (data[2] === "T") {
+              if (
+                document.querySelector("#result3").style.backgroundColor !==
+                "#B8001F"
+              ) {
+                document.querySelector("#result3").style.backgroundColor =
+                  "#B8001F";
+              }
+            } else {
+              if (
+                document.querySelector("#result3").style.backgroundColor !=
+                "#435585"
+              ) {
+                document.querySelector("#result3").style.backgroundColor =
+                  "#435585";
+              }
+            }
+          }
+        } catch (err) {}
+      }
+      setInterval(fetchUpdates, 500);
+      fetchUpdates(); //for first time
+      setInterval(fetchCheck, 500);
+      fetchCheck(); //for first time
+
+      mainForm.addEventListener("submit", async (e) => {
+        //on submission we want to send an http request
+        e.preventDefault();
+        const data = `${headerText.innerText.toLowerCase()}:${cpu.value},${
+          gpu.value
+        },${mem.value}`;
+
+        console.log("SUBMIT");
+        try {
+          //Send the actual Data
+          console.log("DOING FETCH");
+          const res = await fetch("http://127.0.0.1:8080/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "text/plain",
+            },
+            body: data,
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    </script>
+  </body>
+</html>
